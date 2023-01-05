@@ -1,0 +1,39 @@
+/* color properties */
+
+:root {
+    --accent-color: greenyellow;
+    --light-gray: gainsboro;
+}
+
+body {
+    background-color: transparent;
+}
+
+/* background */
+
+.region.fullscreen.below {
+    background-image: url("images/case.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* regions */
+
+.region.top.right {
+    top: inherit;
+}
+
+/* clock module */
+
+.clock .date {
+    font-size: 30px;
+    color: var(--accent-color);
+}
+
+.clock .time {
+    font-size: 100px;
+}
+
+.clock .dimmed {
+    color: var(--light-gray);
+}
