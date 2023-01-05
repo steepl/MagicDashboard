@@ -85,22 +85,41 @@ let config = {
 		// 		apiKey: "YOUR_OPENWEATHER_API_KEY"
 		// 	}
 		// },
-		// {
-		// 	module: "newsfeed",
-		// 	position: "bottom_bar",
-		// 	config: {
-		// 		feeds: [
-		// 			{
-		// 				title: "New York Times",
-		// 				url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
-		// 			}
-		// 		],
-		// 		showSourceTitle: true,
-		// 		showPublishDate: true,
-		// 		broadcastNewsFeeds: true,
-		// 		broadcastNewsUpdates: true
-		// 	}
-		// },
+		{
+			module: "newsfeed",
+			position: "bottom_left",
+			header: "Het laatste nieuws..",
+			config: {
+				feeds: [
+					{
+						title: "Tweakers",
+						url: "http://feeds.feedburner.com/tweakers/nieuws"
+					},
+					{
+						title: "AG Connect",
+						url: "https://www.agconnect.nl/rssfeeds/nieuws.xml"
+					},
+					{
+						title: "NU - Techniek",
+						url: "https://www.nu.nl/rss/tech"
+					},
+					{
+						title: "Computable",
+						url: "https://www.computable.nl/artikelen/artikelen/250449/nieuws.html?rss=1"
+					},
+					{
+						title: "Security.nl",
+						url: "https://www.security.nl/rss/headlines.xml"
+					},
+				],
+				updateInterval: 10000,
+				showSourceTitle: true,
+				showDescription: true,
+				showPublishDate: true,
+				broadcastNewsFeeds: true,
+				broadcastNewsUpdates: true
+			}
+		},
 	]
 };
 

@@ -1,12 +1,24 @@
 /* color properties */
 
 :root {
+    --white: white;
     --accent-color: greenyellow;
     --light-gray: gainsboro;
+    --dark-gray: #666;
 }
 
 body {
     background-color: transparent;
+}
+
+/* module header tags */
+
+header {
+    border-image: linear-gradient(to right, var(--dark-gray) 0%, transparent 125%);
+    border-image-slice: 1;
+    color: var(--white);
+    font-size: 30px;
+    height: 30px;
 }
 
 /* background */
