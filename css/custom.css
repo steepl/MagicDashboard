@@ -5,6 +5,7 @@
     --accent-color: greenyellow;
     --light-gray: gainsboro;
     --dark-gray: #666;
+    --orange-gray: bisque;
 }
 
 body {
@@ -48,4 +49,36 @@ header {
 
 .clock .dimmed {
     color: var(--light-gray);
+}
+
+/* newsfeed module */
+
+#source-title {
+
+    border: 2px greenyellow;
+    border-style: solid;
+    padding: 4px 6px 4px 6px;
+    margin-right: 2px;
+}
+
+#publish-date {
+    color: var(--light-gray);
+    padding: 6px;
+}
+.newsfeed-source {
+    display: flex;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+    margin-top: 18px;
+}
+
+.newsfeed-title {
+    display: block;
+    margin-top: 5px;
+}
+
+.newsfeed-desc {
+    display: block;
+    color: var(--orange-gray);
+    margin-top: 5px;
 }

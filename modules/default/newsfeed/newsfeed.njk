@@ -30,10 +30,10 @@
                     {% if (config.showSourceTitle and item.sourceTitle) or config.showPublishDate %}
                         <div class="newsfeed-source light small dimmed">
                             {% if item.sourceTitle and config.showSourceTitle %}
-                                {{ item.sourceTitle }}{% if config.showPublishDate %}, {% else %}: {% endif %}
+                                <div id="source-title">{{ item.sourceTitle }}{% if config.showPublishDate %} {% else %}: {% endif %}</div>
                             {% endif %}
                             {% if config.showPublishDate %}
-                                {{ item.publishDate }}:
+                                <div id="publish-date">{{ item.publishDate }}:</div>
                             {% endif %}
                         </div>
                     {% endif %}
@@ -57,10 +57,10 @@
             {% if (config.showSourceTitle and sourceTitle) or config.showPublishDate %}
                 <div class="newsfeed-source light small dimmed">
                     {% if sourceTitle and config.showSourceTitle %}
-                        {{ escapeText(sourceTitle, config.dangerouslyDisableAutoEscaping) }}{% if config.showPublishDate %}, {% else %}: {% endif %}
+                        <div id="source-title">{{ escapeText(sourceTitle, config.dangerouslyDisableAutoEscaping) }}{% if config.showPublishDate %} {% else %}: {% endif %}</div>
                     {% endif %}
                     {% if config.showPublishDate %}
-                        {{ publishDate }}:
+                        <div id="publish-date">{{ publishDate }}:</div>
                     {% endif %}
                 </div>
             {% endif %}
