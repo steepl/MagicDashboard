@@ -33,7 +33,11 @@ const MM = (function () {
 			}
 
 			dom.opacity = 0;
-			wrapper.appendChild(dom);
+
+			// check if wrapper contains an element with 'inner-container' as class (can be defined in index.html)
+			// if so, add the content to 'inner-container', else add the content to wrapper
+			var innerWrapper = wrapper.querySelector('.inner-container');
+			innerWrapper ? innerWrapper.appendChild(dom) : wrapper.appendChild(dom);
 
 			const moduleHeader = document.createElement("header");
 			moduleHeader.innerHTML = module.getHeader();

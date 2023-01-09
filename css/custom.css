@@ -36,6 +36,12 @@ header {
     top: inherit;
 }
 
+/* bottom-left */
+
+.inner-container {
+    display: flex;
+}
+
 /* clock module */
 
 .clock .date {
@@ -54,7 +60,6 @@ header {
 /* newsfeed module */
 
 #source-title {
-
     border: 2px greenyellow;
     border-style: solid;
     padding: 4px 6px 4px 6px;
@@ -65,6 +70,7 @@ header {
     color: var(--light-gray);
     padding: 6px;
 }
+
 .newsfeed-source {
     display: flex;
     color: var(--accent-color);
