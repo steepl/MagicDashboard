@@ -93,23 +93,28 @@ let config = {
 				feeds: [
 					{
 						title: "Tweakers",
-						url: "http://feeds.feedburner.com/tweakers/nieuws"
+						url: "http://feeds.feedburner.com/tweakers/nieuws",
+						useCorsProxy: false
 					},
 					{
 						title: "AG Connect",
-						url: "https://www.agconnect.nl/rssfeeds/nieuws.xml"
+						url: "https://www.agconnect.nl/rssfeeds/nieuws.xml",
+						useCorsProxy: false
 					},
 					{
 						title: "NU - Techniek",
-						url: "https://www.nu.nl/rss/tech"
+						url: "https://www.nu.nl/rss/tech",
+						useCorsProxy: false
 					},
 					{
 						title: "Computable",
-						url: "https://www.computable.nl/artikelen/artikelen/250449/nieuws.html?rss=1"
+						url: "https://www.computable.nl/artikelen/artikelen/250449/nieuws.html?rss=1",
+						useCorsProxy: false
 					},
 					{
 						title: "Security.nl",
-						url: "https://www.security.nl/rss/headlines.xml"
+						url: "https://www.security.nl/rss/headlines.xml",
+						useCorsProxy: false
 					},
 				],
 				updateInterval: 10000,
@@ -118,6 +123,14 @@ let config = {
 				showPublishDate: true,
 				broadcastNewsFeeds: true,
 				broadcastNewsUpdates: true
+			}
+		},
+		{
+			module: 'MMM-News-QR',
+			position: 'bottom_left',
+			config: {
+				// Size of the Code
+				imageSize: 150
 			}
 		},
 	]

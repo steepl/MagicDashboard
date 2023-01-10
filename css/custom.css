@@ -71,6 +71,10 @@ header {
     padding: 6px;
 }
 
+.newsfeed {
+    padding-right: 30px;
+}
+
 .newsfeed-source {
     display: flex;
     color: var(--accent-color);
@@ -87,4 +91,10 @@ header {
     display: block;
     color: var(--orange-gray);
     margin-top: 5px;
+}
+
+/* qr module */
+
+.MMM-News-QR {
+    align-self: center;
 }
