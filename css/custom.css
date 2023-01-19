@@ -1,11 +1,13 @@
 /* color properties */
 
 :root {
-    --white: white;
+    --dark-gray: #666;
     --accent-color: greenyellow;
     --light-gray: gainsboro;
-    --dark-gray: #666;
     --orange-gray: bisque;
+    --floral: floralwhite;
+    --beige: beige;
+    --white: white;
 }
 
 body {
@@ -97,4 +99,41 @@ header {
 
 .MMM-News-QR {
     align-self: center;
+}
+
+/* json table module */
+
+.MMM-JsonTable .module-content {
+    font-size: 30px;
+}
+
+.MMM-JsonTable .white {
+    color: white;
+}
+
+.MMM-JsonTable .bold {
+    color: white;
+}
+
+.MMM-JsonTable .floral {
+    color: var(--floral);
+}
+
+.regular table {
+    width: auto;
+    display: table;
+    border-collapse: separate;
+}
+
+.MMM-JsonTable .module-content .regular table td {
+    padding-right: 15px;
+}
+
+.MMM-JsonTable .module-content .regular .footer {
+    color: var(--beige);
+    font-size: 22px;
+    font-weight: 100;
+    line-height: 25px;
+    max-width: 800px;
+    margin-top: 10px;
 }

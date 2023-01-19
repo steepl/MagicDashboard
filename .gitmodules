@@ -1,3 +1,6 @@
 [submodule "modules/MMM-News-QR"]
 	path = modules/MMM-News-QR
 	url = https://github.com/nischi/MMM-News-QR
+[submodule "modules/MMM-JsonTable"]
+	path = modules/MMM-JsonTable
+	url = https://github.com/timdows/MMM-JsonTable
