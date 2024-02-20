@@ -88,7 +88,7 @@ let config = {
 		{
 			module: "newsfeed",
 			position: "bottom_left",
-			header: "Het laatste nieuws..",
+			header: "📢💻 Het laatste tech nieuws",
 			config: {
 				feeds: [
 					{
@@ -128,6 +128,14 @@ let config = {
 				showPublishDate: true,
 				broadcastNewsFeeds: true,
 				broadcastNewsUpdates: true
+			}
+		},
+		{
+			module: 'MMM-News-QR',
+			position: 'bottom_right',
+			config: {
+				// Size of the Code
+				imageSize: 150
 			}
 		},
 	]

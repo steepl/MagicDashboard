@@ -38,10 +38,8 @@ header {
     top: inherit;
 }
 
-/* bottom-left */
-
-.inner-container {
-    display: flex;
+.region.bottom.left {
+    width: 75vw;
 }
 
 /* clock module */
@@ -62,7 +60,7 @@ header {
 /* newsfeed module */
 
 #source-title {
-    border: 2px greenyellow;
+    border: 2px var(--accent-color);
     border-style: solid;
     padding: 4px 6px 4px 6px;
     margin-right: 2px;
@@ -91,6 +89,6 @@ header {
 
 .newsfeed-desc {
     display: block;
-    color: var(--orange-gray);
+    color: var(--floral);
     margin-top: 5px;
 }
