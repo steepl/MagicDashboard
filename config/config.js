@@ -108,7 +108,7 @@ let config = {
 					},
 					{
 						title: "Computable",
-						url: "https://www.computable.nl/artikelen/artikelen/250449/nieuws.html?rss=1",
+						url: "https://www.computable.nl/rss",
 						useCorsProxy: false
 					},
 					{
@@ -116,6 +116,11 @@ let config = {
 						url: "https://www.security.nl/rss/headlines.xml",
 						useCorsProxy: false
 					},
+					{
+						title: "NOS Tech",
+						url: "https://feeds.nos.nl/nosnieuwstech",
+						useCorsProxy: false
+					}
 				],
 				updateInterval: 25000,
 				showSourceTitle: true,
