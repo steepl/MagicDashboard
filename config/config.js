@@ -86,15 +86,6 @@ let config = {
 		// 	}
 		// },
 		{
-			module: "MMM-JsonTable",
-			position: "top_left",
-			header: "Digibende Utrecht werkt aan",
-			config: {
-				url: "/srv/mm-mickey/modules/MMM-JsonTable/data.json",
-				arrayName: "items"
-			}
-		},
-		{
 			module: "newsfeed",
 			position: "bottom_left",
 			header: "Het laatste nieuws..",
@@ -132,14 +123,6 @@ let config = {
 				showPublishDate: true,
 				broadcastNewsFeeds: true,
 				broadcastNewsUpdates: true
-			}
-		},
-		{
-			module: 'MMM-News-QR',
-			position: 'bottom_left',
-			config: {
-				// Size of the Code
-				imageSize: 150
 			}
 		},
 	]
