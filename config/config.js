@@ -63,7 +63,7 @@ let config = {
 						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=204"
 					}
 				],
-				maximumEntries: 10,
+				maximumEntries: 5,
 				fade: false
 			}
 		},
@@ -154,10 +154,38 @@ let config = {
 					},
 					{
 						humanize: true,
-						showAt: "09:00",
+						showAt: "10:45",
 						time: "11:00",
 						hideAt: "12:30",
 						beforeText: "Blok 2",
+					},
+					{
+						humanize: true,
+						showAt: "11:00",
+						time: "12:30",
+						hideAt: "13:00",
+						beforeText: "Grote Pauze",
+					},
+					{
+						humanize: true,
+						showAt: "12:30",
+						time: "13:00",
+						hideAt: "14:30",
+						beforeText: "Blok 3",
+					},
+					{
+						humanize: true,
+						showAt: "13:00",
+						time: "14:30",
+						hideAt: "14:45",
+						beforeText: "Kleine Pauze",
+					},
+					{
+						humanize: true,
+						showAt: "14:30",
+						time: "14:45",
+						hideAt: "16:00",
+						beforeText: "Blok 4",
 					},
 				]
 			}
