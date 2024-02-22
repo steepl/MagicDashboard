@@ -47,21 +47,26 @@ let config = {
 		},
 		{
 			module: "clock",
-			position: "top_right"
+			position: "top_left"
 		},
-		// {
-		// 	module: "calendar",
-		// 	header: "US Holidays",
-		// 	position: "top_left",
-		// 	config: {
-		// 		calendars: [
-		// 			{
-		// 				symbol: "calendar-check",
-		// 				url: "webcal://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics"
-		// 			}
-		// 		]
-		// 	}
-		// },
+		{
+			module: "calendar",
+			position: "top_left",
+			config: {
+				calendars: [
+					{
+						symbol: "calendar-check",
+						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=76"
+					},
+					{
+						symbol: "",
+						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=204"
+					}
+				],
+				maximumEntries: 10,
+				fade: false
+			}
+		},
 		// {
 		// 	module: "weather",
 		// 	position: "top_right",
@@ -74,17 +79,6 @@ let config = {
 		// 	}
 		// },
 		// {
-		// 	module: "weather",
-		// 	position: "top_right",
-		// 	header: "Weather Forecast",
-		// 	config: {
-		// 		weatherProvider: "openweathermap",
-		// 		type: "forecast",
-		// 		location: "New York",
-		// 		locationID: "5128581", //ID from http://bulk.openweathermap.org/sample/city.list.json.gz; unzip the gz file and find your city
-		// 		apiKey: "YOUR_OPENWEATHER_API_KEY"
-		// 	}
-		// },
 		{
 			module: "newsfeed",
 			position: "bottom_left",
@@ -136,6 +130,36 @@ let config = {
 			config: {
 				// Size of the Code
 				imageSize: 150
+			}
+		},
+		{
+			module: "MMM-DailyAlarm",
+			header: "Blokken",
+			position: "top_right",
+			config: {
+				alarms: [
+					{
+						humanize: true,
+						showAt: "09:00",
+						time: "09:30",
+						hideAt: "10:45",
+						beforeText: "Blok 1",
+					},
+					{
+						humanize: true,
+						showAt: "09:00",
+						time: "10:45",
+						hideAt: "11:00",
+						beforeText: "Kleine Pauze",
+					},
+					{
+						humanize: true,
+						showAt: "09:00",
+						time: "11:00",
+						hideAt: "12:30",
+						beforeText: "Blok 2",
+					},
+				]
 			}
 		},
 	]

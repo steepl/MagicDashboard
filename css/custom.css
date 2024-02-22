@@ -3,6 +3,7 @@
 :root {
     --dark-gray: #666;
     --accent-color: greenyellow;
+    --alarm-background: darkslateblue;
     --light-gray: gainsboro;
     --orange-gray: bisque;
     --floral: floralwhite;
@@ -34,6 +35,10 @@ header {
 
 /* regions */
 
+.region.top.left {
+    top: inherit;
+}
+
 .region.top.right {
     top: inherit;
 }
@@ -55,6 +60,12 @@ header {
 
 .clock .dimmed {
     color: var(--light-gray);
+}
+
+/* calendar module */
+
+#module_3_calendar .time.light {
+    color: var(--floral);
 }
 
 /* newsfeed module */
@@ -91,4 +102,41 @@ header {
     display: block;
     color: var(--floral);
     margin-top: 5px;
+}
+
+#DAILYALARM {
+    display: flex;
+    flex-direction: column;
+    gap: .7em;
+    font-size: 1.3rem;
+}
+
+#DAILYALARM .text {
+    color: white;
+}
+
+#DAILYALARM .time {
+    color: lightgray;
+}
+
+#DAILYALARM .before {
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 1.3em 1em 1.3em 3em;
+}
+
+#DAILYALARM .before:first-of-type {
+    background-color: var(--alarm-background);
+    border-left: .5em solid rgba(65, 55, 126);
+}
+
+#DAILYALARM .after {
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    padding: 1.3em 1em 1.3em 3em;
+}
+
+#DAILYALARM .after:first-of-type {
+    background-color: var(--alarm-background);
+    border-left: .5em solid rgba(65, 55, 126);
 }
