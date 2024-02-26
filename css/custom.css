@@ -9,6 +9,7 @@
     --floral: floralwhite;
     --beige: beige;
     --white: white;
+    --font-size-small-medium: 1.25rem;
 }
 
 body {
@@ -66,6 +67,10 @@ header {
 
 #module_3_calendar .time.light {
     color: var(--floral);
+}
+
+#module_3_calendar .time.light {
+    font-size: var(--font-size-small-medium);
 }
 
 /* newsfeed module */

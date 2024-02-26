@@ -52,6 +52,7 @@ let config = {
 		{
 			module: "calendar",
 			position: "top_left",
+			fetchInterval: 3600000,
 			config: {
 				calendars: [
 					{
@@ -63,7 +64,7 @@ let config = {
 						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=204"
 					}
 				],
-				maximumEntries: 5,
+				maximumEntries: 6,
 				fade: false
 			}
 		},
