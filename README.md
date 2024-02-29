@@ -1,5 +1,7 @@
 # MagicDashboard
 
+![](/.github/example.png)
+
 MagicDashboard is a fork of [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror) designed to transform your TV or spare monitor into a live dashboard.
 
 ## Modules
