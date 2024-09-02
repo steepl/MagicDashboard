@@ -1,10 +1,6 @@
 /* global WeatherProvider, WeatherObject, WeatherUtils */
 
-/* MagicMirror²
- * Module: Weather
- * Provider: Environment Canada (EC)
- *
- * This class is a provider for Environment Canada MSC Datamart
+/* This class is a provider for Environment Canada MSC Datamart
  * Note that this is only for Canadian locations and does not require an API key (access is anonymous)
  *
  * EC Documentation at following links:
@@ -27,8 +23,6 @@
  * with locations you can search under column B (English Names), with the corresponding siteCode under
  * column A (Codes) and provCode under column C (Province).
  *
- * Original by Kevin Godin
- *
  * License to use Environment Canada (EC) data is detailed here:
  * 	https://eccc-msc.github.io/open-data/licence/readme_en/
  *
@@ -49,7 +43,7 @@ WeatherProvider.register("envcanada", {
 	// Set config values (equates to weather module config values). Also set values pertaining to caching of
 	// Today's temperature forecast (for use in the Forecast functions below)
 	//
-	setConfig: function (config) {
+	setConfig (config) {
 		this.config = config;
 
 		this.todayTempCacheMin = 0;
@@ -61,7 +55,7 @@ WeatherProvider.register("envcanada", {
 	//
 	// Called when the weather provider is started
 	//
-	start: function () {
+	start () {
 		Log.info(`Weather provider: ${this.providerName} started.`);
 		this.setFetchedLocation(this.config.location);
 	},
@@ -69,7 +63,7 @@ WeatherProvider.register("envcanada", {
 	//
 	// Override the fetchCurrentWeather method to query EC and construct a Current weather object
 	//
-	fetchCurrentWeather() {
+	fetchCurrentWeather () {
 		this.fetchData(this.getUrl(), "xml")
 			.then((data) => {
 				if (!data) {
@@ -89,7 +83,7 @@ WeatherProvider.register("envcanada", {
 	//
 	// Override the fetchWeatherForecast method to query EC and construct Forecast weather objects
 	//
-	fetchWeatherForecast() {
+	fetchWeatherForecast () {
 		this.fetchData(this.getUrl(), "xml")
 			.then((data) => {
 				if (!data) {
@@ -109,7 +103,7 @@ WeatherProvider.register("envcanada", {
 	//
 	// Override the fetchWeatherHourly method to query EC and construct Forecast weather objects
 	//
-	fetchWeatherHourly() {
+	fetchWeatherHourly () {
 		this.fetchData(this.getUrl(), "xml")
 			.then((data) => {
 				if (!data) {
@@ -137,7 +131,7 @@ WeatherProvider.register("envcanada", {
 	// URL defaults to the English version simply because there is no language dependency in the data
 	// being accessed. This is only pertinent when using the EC data elements that contain a textual forecast.
 	//
-	getUrl() {
+	getUrl () {
 		return `https://dd.weather.gc.ca/citypage_weather/xml/${this.config.provCode}/${this.config.siteCode}_e.xml`;
 	},
 
@@ -145,7 +139,7 @@ WeatherProvider.register("envcanada", {
 	// Generate a WeatherObject based on current EC weather conditions
 	//
 
-	generateWeatherObjectFromCurrentWeather(ECdoc) {
+	generateWeatherObjectFromCurrentWeather (ECdoc) {
 		const currentWeather = new WeatherObject();
 
 		// There are instances where EC will update weather data and current temperature will not be
@@ -216,7 +210,7 @@ WeatherProvider.register("envcanada", {
 	// Generate an array of WeatherObjects based on EC weather forecast
 	//
 
-	generateWeatherObjectsFromForecast(ECdoc) {
+	generateWeatherObjectsFromForecast (ECdoc) {
 		// Declare an array to hold each day's forecast object
 
 		const days = [];
@@ -360,7 +354,7 @@ WeatherProvider.register("envcanada", {
 	// Generate an array of WeatherObjects based on EC hourly weather forecast
 	//
 
-	generateWeatherObjectsFromHourly(ECdoc) {
+	generateWeatherObjectsFromHourly (ECdoc) {
 		// Declare an array to hold each hour's forecast object
 
 		const hours = [];
@@ -384,7 +378,7 @@ WeatherProvider.register("envcanada", {
 
 			const foreTime = moment(hourGroup[stepHour].getAttribute("dateTimeUTC"), "YYYYMMDDhhmmss");
 			const currTime = foreTime.add(hourOffset, "hours");
-			weather.date = moment.unix(currTime);
+			weather.date = moment(currTime);
 
 			// Capture the temperature
 
@@ -416,7 +410,7 @@ WeatherProvider.register("envcanada", {
 	// the next Forecast element should be considered - i.e. look at Today *and* Tonight vs.Tonight-only
 	//
 
-	setMinMaxTemps(weather, foreGroup, today, fullDay, currentTemp) {
+	setMinMaxTemps (weather, foreGroup, today, fullDay, currentTemp) {
 		const todayTemp = foreGroup[today].querySelector("temperatures temperature").textContent;
 
 		const todayClass = foreGroup[today].querySelector("temperatures temperature").getAttribute("class");
@@ -498,23 +492,23 @@ WeatherProvider.register("envcanada", {
 	// the nightime forecast after a certain point in that specific scenario.
 	//
 
-	setPrecipitation(weather, foreGroup, today) {
+	setPrecipitation (weather, foreGroup, today) {
 		if (foreGroup[today].querySelector("precipitation accumulation")) {
 			weather.precipitationAmount = foreGroup[today].querySelector("precipitation accumulation amount").textContent * 1.0;
 			weather.precipitationUnits = foreGroup[today].querySelector("precipitation accumulation amount").getAttribute("units");
 		}
 
 		// Check Today element for POP
-
-		if (foreGroup[today].querySelector("abbreviatedForecast pop").textContent > 0) {
-			weather.precipitationProbability = foreGroup[today].querySelector("abbreviatedForecast pop").textContent;
+		const precipPOP = foreGroup[today].querySelector("abbreviatedForecast pop").textContent * 1.0;
+		if (precipPOP > 0) {
+			weather.precipitationProbability = precipPOP;
 		}
 	},
 
 	//
 	// Convert the icons to a more usable name.
 	//
-	convertWeatherType(weatherType) {
+	convertWeatherType (weatherType) {
 		const weatherTypes = {
 			"00": "day-sunny",
 			"01": "day-sunny",

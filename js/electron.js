@@ -8,9 +8,10 @@ const Log = require("./logger");
 let config = process.env.config ? JSON.parse(process.env.config) : {};
 // Module to control application life.
 const app = electron.app;
-// If ELECTRON_DISABLE_GPU is set electron is started with --disable-gpu flag.
+// Per default electron is started with --disable-gpu flag, if you want the gpu enabled,
+// you must set the env var ELECTRON_ENABLE_GPU=1 on startup.
 // See https://www.electronjs.org/docs/latest/tutorial/offscreen-rendering for more info.
-if (process.env.ELECTRON_DISABLE_GPU !== undefined) {
+if (process.env.ELECTRON_ENABLE_GPU !== "1") {
 	app.disableHardwareAcceleration();
 }
 
@@ -24,12 +25,22 @@ let mainWindow;
 /**
  *
  */
-function createWindow() {
+function createWindow () {
+	// see https://www.electronjs.org/docs/latest/api/screen
+	// Create a window that fills the screen's available work area.
+	let electronSize = (800, 600);
+	try {
+		electronSize = electron.screen.getPrimaryDisplay().workAreaSize;
+	} catch {
+		Log.warn("Could not get display size, using defaults ...");
+	}
+
 	let electronSwitchesDefaults = ["autoplay-policy", "no-user-gesture-required"];
 	app.commandLine.appendSwitch(...new Set(electronSwitchesDefaults, config.electronSwitches));
 	let electronOptionsDefaults = {
-		width: 800,
-		height: 600,
+		width: electronSize.width,
+		height: electronSize.height,
+		icon: "mm2.png",
 		x: 0,
 		y: 0,
 		darkTheme: true,
@@ -50,6 +61,7 @@ function createWindow() {
 		electronOptionsDefaults.frame = false;
 		electronOptionsDefaults.transparent = true;
 		electronOptionsDefaults.hasShadow = false;
+		electronOptionsDefaults.fullscreen = true;
 	}
 
 	const electronOptions = Object.assign({}, electronOptionsDefaults, config.electronOptions);
@@ -67,8 +79,9 @@ function createWindow() {
 		prefix = "http://";
 	}
 
-	let address = (config.address === void 0) | (config.address === "") ? (config.address = "localhost") : config.address;
-	mainWindow.loadURL(`${prefix}${address}:${config.port}`);
+	let address = (config.address === void 0) | (config.address === "") | (config.address === "0.0.0.0") ? (config.address = "localhost") : config.address;
+	const port = process.env.MM_PORT || config.port;
+	mainWindow.loadURL(`${prefix}${address}:${port}`);
 
 	// Open the DevTools if run with "npm start dev"
 	if (process.argv.includes("dev")) {
@@ -110,28 +123,20 @@ function createWindow() {
 	mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
 		let curHeaders = details.responseHeaders;
 		if (config["ignoreXOriginHeader"] || false) {
-			curHeaders = Object.fromEntries(Object.entries(curHeaders).filter((header) => !/x-frame-options/i.test(header[0])));
+			curHeaders = Object.fromEntries(Object.entries(curHeaders).filter((header) => !(/x-frame-options/i).test(header[0])));
 		}
 
 		if (config["ignoreContentSecurityPolicy"] || false) {
-			curHeaders = Object.fromEntries(Object.entries(curHeaders).filter((header) => !/content-security-policy/i.test(header[0])));
+			curHeaders = Object.fromEntries(Object.entries(curHeaders).filter((header) => !(/content-security-policy/i).test(header[0])));
 		}
 
 		callback({ responseHeaders: curHeaders });
 	});
 
 	mainWindow.once("ready-to-show", () => {
-		mainWindow.setFullScreen(true);
 		mainWindow.show();
 	});
 }
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-app.on("ready", function () {
-	Log.log("Launching application.");
-	createWindow();
-});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -175,8 +180,21 @@ app.on("certificate-error", (event, webContents, url, error, certificate, callba
 	callback(true);
 });
 
+if (process.env.clientonly) {
+	app.whenReady().then(() => {
+		Log.log("Launching client viewer application.");
+		createWindow();
+	});
+}
+
 // Start the core application if server is run on localhost
 // This starts all node helpers and starts the webserver.
 if (["localhost", "127.0.0.1", "::1", "::ffff:127.0.0.1", undefined].includes(config.address)) {
-	core.start().then((c) => (config = c));
+	core.start().then((c) => {
+		config = c;
+		app.whenReady().then(() => {
+			Log.log("Launching application.");
+			createWindow();
+		});
+	});
 }

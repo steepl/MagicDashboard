@@ -1,12 +1,7 @@
 /* global WeatherProvider, WeatherObject, WeatherUtils */
 
-/* MagicMirror²
- * Module: Weather
- * Provider: weather.gov
+/* Provider: weather.gov
  * https://weather-gov.github.io/api/general-faqs
- *
- * Original by Vince Peri
- * MIT Licensed.
  *
  * This class is a provider for weather.gov.
  * Note that this is only for US locations (lat and lon) and does not require an API key
@@ -37,24 +32,23 @@ WeatherProvider.register("weathergov", {
 	stationObsURL: "tbd",
 
 	// Called to set the config, this config is the same as the weather module's config.
-	setConfig: function (config) {
+	setConfig (config) {
 		this.config = config;
-		this.config.apiBase = "https://api.weather.gov";
 		this.fetchWxGovURLs(this.config);
 	},
 
 	// Called when the weather provider is about to start.
-	start: function () {
+	start () {
 		Log.info(`Weather provider: ${this.providerName} started.`);
 	},
 
 	// This returns the name of the fetched location or an empty string.
-	fetchedLocation: function () {
+	fetchedLocation () {
 		return this.fetchedLocationName || "";
 	},
 
 	// Overwrite the fetchCurrentWeather method.
-	fetchCurrentWeather() {
+	fetchCurrentWeather () {
 		if (!this.configURLs) {
 			Log.info("fetchCurrentWeather: fetch wx waiting on config URLs");
 			return;
@@ -75,7 +69,7 @@ WeatherProvider.register("weathergov", {
 	},
 
 	// Overwrite the fetchWeatherForecast method.
-	fetchWeatherForecast() {
+	fetchWeatherForecast () {
 		if (!this.configURLs) {
 			Log.info("fetchWeatherForecast: fetch wx waiting on config URLs");
 			return;
@@ -96,7 +90,7 @@ WeatherProvider.register("weathergov", {
 	},
 
 	// Overwrite the fetchWeatherHourly method.
-	fetchWeatherHourly() {
+	fetchWeatherHourly () {
 		if (!this.configURLs) {
 			Log.info("fetchWeatherHourly: fetch wx waiting on config URLs");
 			return;
@@ -122,8 +116,8 @@ WeatherProvider.register("weathergov", {
 	/*
 	 * Get specific URLs
 	 */
-	fetchWxGovURLs(config) {
-		this.fetchData(`${config.apiBase}/points/${config.lat},${config.lon}`)
+	fetchWxGovURLs (config) {
+		this.fetchData(`${config.apiBase}/${config.lat},${config.lon}`)
 			.then((data) => {
 				if (!data || !data.properties) {
 					// points URL did not respond with usable data.
@@ -162,12 +156,13 @@ WeatherProvider.register("weathergov", {
 				}
 			});
 	},
+
 	/*
 	 * Generate a WeatherObject based on hourlyWeatherInformation
 	 * Weather.gov API uses specific units; API does not include choice of units
 	 * ... object needs data in units based on config!
 	 */
-	generateWeatherObjectsFromHourly(forecasts) {
+	generateWeatherObjectsFromHourly (forecasts) {
 		const days = [];
 
 		// variable for date
@@ -182,6 +177,12 @@ WeatherProvider.register("weathergov", {
 			weather.windSpeed = WeatherUtils.convertWindToMs(weather.windSpeed);
 			weather.windFromDirection = forecast.windDirection;
 			weather.temperature = forecast.temperature;
+			//assign probability of precipitation
+			if (forecast.probabilityOfPrecipitation.value === null) {
+				weather.precipitationProbability = 0;
+			} else {
+				weather.precipitationProbability = forecast.probabilityOfPrecipitation.value;
+			}
 			// use the forecast isDayTime attribute to help build the weatherType label
 			weather.weatherType = this.convertWeatherType(forecast.shortForecast, forecast.isDaytime);
 
@@ -200,7 +201,7 @@ WeatherProvider.register("weathergov", {
 	 * Weather.gov API uses specific units; API does not include choice of units
 	 * ... object needs data in units based on config!
 	 */
-	generateWeatherObjectFromCurrentWeather(currentWeatherData) {
+	generateWeatherObjectFromCurrentWeather (currentWeatherData) {
 		const currentWeather = new WeatherObject();
 
 		currentWeather.date = moment(currentWeatherData.timestamp);
@@ -210,7 +211,7 @@ WeatherProvider.register("weathergov", {
 		currentWeather.minTemperature = currentWeatherData.minTemperatureLast24Hours.value;
 		currentWeather.maxTemperature = currentWeatherData.maxTemperatureLast24Hours.value;
 		currentWeather.humidity = Math.round(currentWeatherData.relativeHumidity.value);
-		currentWeather.precipitationAmount = currentWeatherData.precipitationLastHour.value;
+		currentWeather.precipitationAmount = currentWeatherData.precipitationLastHour.value ? currentWeatherData.precipitationLastHour.value : currentWeatherData.precipitationLast3Hours.value;
 		if (currentWeatherData.heatIndex.value !== null) {
 			currentWeather.feelsLikeTemp = currentWeatherData.heatIndex.value;
 		} else if (currentWeatherData.windChill.value !== null) {
@@ -230,16 +231,14 @@ WeatherProvider.register("weathergov", {
 	/*
 	 * Generate WeatherObjects based on forecast information
 	 */
-	generateWeatherObjectsFromForecast(forecasts) {
+	generateWeatherObjectsFromForecast (forecasts) {
 		return this.fetchForecastDaily(forecasts);
 	},
 
 	/*
 	 * fetch forecast information for daily forecast.
 	 */
-	fetchForecastDaily(forecasts) {
-		const precipitationProbabilityRegEx = "Chance of precipitation is ([0-9]+?)%";
-
+	fetchForecastDaily (forecasts) {
 		// initial variable declaration
 		const days = [];
 		// variables for temperature range and rain
@@ -262,8 +261,12 @@ WeatherProvider.register("weathergov", {
 
 				minTemp = [];
 				maxTemp = [];
-				const precipitation = new RegExp(precipitationProbabilityRegEx, "g").exec(forecast.detailedForecast);
-				if (precipitation) weather.precipitationProbability = precipitation[1];
+				//assign probability of precipitation
+				if (forecast.probabilityOfPrecipitation.value === null) {
+					weather.precipitationProbability = 0;
+				} else {
+					weather.precipitationProbability = forecast.probabilityOfPrecipitation.value;
+				}
 
 				// set new date
 				date = moment(forecast.startTime).format("YYYY-MM-DD");
@@ -298,7 +301,7 @@ WeatherProvider.register("weathergov", {
 	/*
 	 * Convert the icons to a more usable name.
 	 */
-	convertWeatherType(weatherType, isDaytime) {
+	convertWeatherType (weatherType, isDaytime) {
 		//https://w1.weather.gov/xml/current_obs/weather.php
 		// There are way too many types to create, so lets just look for certain strings
 

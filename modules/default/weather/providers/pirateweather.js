@@ -1,14 +1,7 @@
 /* global WeatherProvider, WeatherObject */
 
-/* MagicMirror²
- * Module: Weather
- * Provider: Pirate Weather
- *
- * Written by Nicholas Hubbard https://github.com/nhubbard for formerly Dark Sky Provider
- * Modified by Karsten Hassel for Pirate Weather
- * MIT Licensed
- *
- * This class is a provider for Pirate Weather, it is a replacement for Dark Sky (same api).
+/* This class is a provider for Pirate Weather, it is a replacement for Dark Sky (same api),
+ * see http://pirateweather.net/en/latest/
  */
 WeatherProvider.register("pirateweather", {
 	// Set the name of the provider.
@@ -25,7 +18,7 @@ WeatherProvider.register("pirateweather", {
 		lon: 0
 	},
 
-	fetchCurrentWeather() {
+	fetchCurrentWeather () {
 		this.fetchData(this.getUrl())
 			.then((data) => {
 				if (!data || !data.currently || typeof data.currently.temperature === "undefined") {
@@ -42,7 +35,7 @@ WeatherProvider.register("pirateweather", {
 			.finally(() => this.updateAvailable());
 	},
 
-	fetchWeatherForecast() {
+	fetchWeatherForecast () {
 		this.fetchData(this.getUrl())
 			.then((data) => {
 				if (!data || !data.daily || !data.daily.data.length) {
@@ -60,12 +53,12 @@ WeatherProvider.register("pirateweather", {
 	},
 
 	// Create a URL from the config and base URL.
-	getUrl() {
+	getUrl () {
 		return `${this.config.apiBase}${this.config.weatherEndpoint}/${this.config.apiKey}/${this.config.lat},${this.config.lon}?units=si&lang=${this.config.lang}`;
 	},
 
 	// Implement WeatherDay generator.
-	generateWeatherDayFromCurrentWeather(currentWeatherData) {
+	generateWeatherDayFromCurrentWeather (currentWeatherData) {
 		const currentWeather = new WeatherObject();
 
 		currentWeather.date = moment();
@@ -80,7 +73,7 @@ WeatherProvider.register("pirateweather", {
 		return currentWeather;
 	},
 
-	generateWeatherObjectsFromForecast(forecasts) {
+	generateWeatherObjectsFromForecast (forecasts) {
 		const days = [];
 
 		for (const forecast of forecasts) {
@@ -114,7 +107,7 @@ WeatherProvider.register("pirateweather", {
 	},
 
 	// Map icons from Pirate Weather to our icons.
-	convertWeatherType(weatherType) {
+	convertWeatherType (weatherType) {
 		const weatherTypes = {
 			"clear-day": "day-sunny",
 			"clear-night": "night-clear",

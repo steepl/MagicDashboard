@@ -1,16 +1,25 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const Log = require("logger");
-const fetch = require("./fetch");
+
+const startUp = new Date();
 
 /**
  * Gets the config.
- *
  * @param {Request} req - the request
  * @param {Response} res - the result
  */
-function getConfig(req, res) {
+function getConfig (req, res) {
 	res.send(config);
+}
+
+/**
+ * Gets the startup time.
+ * @param {Request} req - the request
+ * @param {Response} res - the result
+ */
+function getStartup (req, res) {
+	res.send(startUp);
 }
 
 /**
@@ -19,11 +28,10 @@ function getConfig(req, res) {
  * Example input request url: /cors?sendheaders=header1:value1,header2:value2&expectedheaders=header1,header2&url=http://www.test.com/path?param1=value1
  *
  * Only the url-param of the input request url is required. It must be the last parameter.
- *
  * @param {Request} req - the request
  * @param {Response} res - the result
  */
-async function cors(req, res) {
+async function cors (req, res) {
 	try {
 		const urlRegEx = "url=(.+?)$";
 		let url;
@@ -57,11 +65,10 @@ async function cors(req, res) {
 
 /**
  * Gets headers and values to attach to the web request.
- *
  * @param {string} url - The url containing the headers and values to send.
  * @returns {object} An object specifying name and value of the headers.
  */
-function getHeadersToSend(url) {
+function getHeadersToSend (url) {
 	const headersToSend = { "User-Agent": `Mozilla/5.0 MagicMirror/${global.version}` };
 	const headersToSendMatch = new RegExp("sendheaders=(.+?)(&|$)", "g").exec(url);
 	if (headersToSendMatch) {
@@ -79,11 +86,10 @@ function getHeadersToSend(url) {
 
 /**
  * Gets the headers expected from the response.
- *
  * @param {string} url - The url containing the expected headers from the response.
  * @returns {string[]} headers - The name of the expected headers.
  */
-function geExpectedRecievedHeaders(url) {
+function geExpectedRecievedHeaders (url) {
 	const expectedRecievedHeaders = ["Content-Type"];
 	const expectedRecievedHeadersMatch = new RegExp("expectedheaders=(.+?)(&|$)", "g").exec(url);
 	if (expectedRecievedHeadersMatch) {
@@ -97,11 +103,10 @@ function geExpectedRecievedHeaders(url) {
 
 /**
  * Gets the HTML to display the magic mirror.
- *
  * @param {Request} req - the request
  * @param {Response} res - the result
  */
-function getHtml(req, res) {
+function getHtml (req, res) {
 	let html = fs.readFileSync(path.resolve(`${global.root_path}/index.html`), { encoding: "utf8" });
 	html = html.replace("#VERSION#", global.version);
 
@@ -116,12 +121,11 @@ function getHtml(req, res) {
 
 /**
  * Gets the MagicMirror version.
- *
  * @param {Request} req - the request
  * @param {Response} res - the result
  */
-function getVersion(req, res) {
+function getVersion (req, res) {
 	res.send(global.version);
 }
 
-module.exports = { cors, getConfig, getHtml, getVersion };
+module.exports = { cors, getConfig, getHtml, getVersion, getStartup };

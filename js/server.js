@@ -1,13 +1,7 @@
-/* MagicMirror²
- * Server
- *
- * By Michael Teeuw https://michaelteeuw.nl
- * MIT Licensed.
- */
-const fs = require("fs");
-const http = require("http");
-const https = require("https");
-const path = require("path");
+const fs = require("node:fs");
+const http = require("node:http");
+const https = require("node:https");
+const path = require("node:path");
 const express = require("express");
 const ipfilter = require("express-ipfilter").IpFilter;
 const helmet = require("helmet");
@@ -15,15 +9,14 @@ const socketio = require("socket.io");
 
 const Log = require("logger");
 const Utils = require("./utils");
-const { cors, getConfig, getHtml, getVersion } = require("./server_functions");
+const { cors, getConfig, getHtml, getVersion, getStartup } = require("./server_functions");
 
 /**
  * Server
- *
  * @param {object} config The MM config
  * @class
  */
-function Server(config) {
+function Server (config) {
 	const app = express();
 	const port = process.env.MM_PORT || config.port;
 	const serverSockets = new Set();
@@ -31,7 +24,6 @@ function Server(config) {
 
 	/**
 	 * Opens the server for incoming connections
-	 *
 	 * @returns {Promise} A promise that is resolved when the server listens to connections
 	 */
 	this.open = function () {
@@ -64,7 +56,7 @@ function Server(config) {
 			server.listen(port, config.address || "localhost");
 
 			if (config.ipWhitelist instanceof Array && config.ipWhitelist.length === 0) {
-				Log.warn(Utils.colors.warn("You're using a full whitelist configuration to allow for all IPs"));
+				Log.warn("You're using a full whitelist configuration to allow for all IPs");
 			}
 
 			app.use(function (req, res, next) {
@@ -93,6 +85,8 @@ function Server(config) {
 
 			app.get("/config", (req, res) => getConfig(req, res));
 
+			app.get("/startup", (req, res) => getStartup(req, res));
+
 			app.get("/", (req, res) => getHtml(req, res));
 
 			server.on("listening", () => {
@@ -106,7 +100,6 @@ function Server(config) {
 
 	/**
 	 * Closes the server and destroys all lingering connections to it.
-	 *
 	 * @returns {Promise} A promise that resolves when server has successfully shut down
 	 */
 	this.close = function () {

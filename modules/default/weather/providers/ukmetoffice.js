@@ -1,12 +1,7 @@
 /* global WeatherProvider, WeatherObject, WeatherUtils */
 
-/* MagicMirror²
- * Module: Weather
- *
- * By Malcolm Oakes https://github.com/maloakes
- * MIT Licensed.
- *
- * This class is a provider for UK Met Office Datapoint.
+/* This class is a provider for UK Met Office Datapoint,
+ * see https://www.metoffice.gov.uk/
  */
 WeatherProvider.register("ukmetoffice", {
 	// Set the name of the provider.
@@ -22,7 +17,7 @@ WeatherProvider.register("ukmetoffice", {
 	},
 
 	// Overwrite the fetchCurrentWeather method.
-	fetchCurrentWeather() {
+	fetchCurrentWeather () {
 		this.fetchData(this.getUrl("3hourly"))
 			.then((data) => {
 				if (!data || !data.SiteRep || !data.SiteRep.DV || !data.SiteRep.DV.Location || !data.SiteRep.DV.Location.Period || data.SiteRep.DV.Location.Period.length === 0) {
@@ -43,7 +38,7 @@ WeatherProvider.register("ukmetoffice", {
 	},
 
 	// Overwrite the fetchCurrentWeather method.
-	fetchWeatherForecast() {
+	fetchWeatherForecast () {
 		this.fetchData(this.getUrl("daily"))
 			.then((data) => {
 				if (!data || !data.SiteRep || !data.SiteRep.DV || !data.SiteRep.DV.Location || !data.SiteRep.DV.Location.Period || data.SiteRep.DV.Location.Period.length === 0) {
@@ -67,14 +62,14 @@ WeatherProvider.register("ukmetoffice", {
 	/*
 	 * Gets the complete url for the request
 	 */
-	getUrl(forecastType) {
+	getUrl (forecastType) {
 		return this.config.apiBase + this.config.locationID + this.getParams(forecastType);
 	},
 
 	/*
 	 * Generate a WeatherObject based on currentWeatherInformation
 	 */
-	generateWeatherObjectFromCurrentWeather(currentWeatherData) {
+	generateWeatherObjectFromCurrentWeather (currentWeatherData) {
 		const currentWeather = new WeatherObject();
 		const location = currentWeatherData.SiteRep.DV.Location;
 
@@ -119,7 +114,7 @@ WeatherProvider.register("ukmetoffice", {
 	/*
 	 * Generate WeatherObjects based on forecast information
 	 */
-	generateWeatherObjectsFromForecast(forecasts) {
+	generateWeatherObjectsFromForecast (forecasts) {
 		const days = [];
 
 		// loop round the (5) periods getting the data
@@ -150,7 +145,7 @@ WeatherProvider.register("ukmetoffice", {
 	/*
 	 * Convert the Met Office icons to a more usable name.
 	 */
-	convertWeatherType(weatherType) {
+	convertWeatherType (weatherType) {
 		const weatherTypes = {
 			0: "night-clear",
 			1: "day-sunny",
@@ -189,11 +184,10 @@ WeatherProvider.register("ukmetoffice", {
 
 	/**
 	 * Generates an url with api parameters based on the config.
-	 *
 	 * @param {string} forecastType daily or 3hourly forecast
 	 * @returns {string} url
 	 */
-	getParams(forecastType) {
+	getParams (forecastType) {
 		let params = "?";
 		params += `res=${forecastType}`;
 		params += `&key=${this.config.apiKey}`;

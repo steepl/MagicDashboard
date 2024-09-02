@@ -1,7 +1,3 @@
-/* MagicMirror² Test config for analog clock face
- *
- * MIT Licensed.
- */
 let config = {
 	modules: [
 		{
@@ -9,7 +5,8 @@ let config = {
 			position: "middle_center",
 			config: {
 				displayType: "analog",
-				analogFace: "face-006"
+				analogFace: "face-006",
+				showDate: false
 			}
 		}
 	]

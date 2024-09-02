@@ -1,27 +1,23 @@
-/* MagicMirror²
- *
- * Check the configuration file for errors
- *
- * By Rodrigo Ramírez Norambuena https://rodrigoramirez.com
- * MIT Licensed.
- */
-const path = require("path");
-const fs = require("fs");
+const path = require("node:path");
+const fs = require("node:fs");
+const colors = require("ansis");
 const { Linter } = require("eslint");
 
 const linter = new Linter();
 
+const Ajv = require("ajv");
+
+const ajv = new Ajv();
+
 const rootPath = path.resolve(`${__dirname}/../`);
 const Log = require(`${rootPath}/js/logger.js`);
-const Utils = require(`${rootPath}/js/utils.js`);
 
 /**
  * Returns a string with path of configuration file.
  * Check if set by environment variable MM_CONFIG_FILE
- *
  * @returns {string} path and filename of the config file
  */
-function getConfigFile() {
+function getConfigFile () {
 	// FIXME: This function should be in core. Do you want refactor me ;) ?, be good!
 	return path.resolve(process.env.MM_CONFIG_FILE || `${rootPath}/config/config.js`);
 }
@@ -29,12 +25,12 @@ function getConfigFile() {
 /**
  * Checks the config file using eslint.
  */
-function checkConfigFile() {
+function checkConfigFile () {
 	const configFileName = getConfigFile();
 
 	// Check if file is present
 	if (fs.existsSync(configFileName) === false) {
-		Log.error(Utils.colors.error("File not found: "), configFileName);
+		Log.error(`File not found: ${configFileName}`);
 		throw new Error("No config file present!");
 	}
 
@@ -42,12 +38,12 @@ function checkConfigFile() {
 	try {
 		fs.accessSync(configFileName, fs.F_OK);
 	} catch (e) {
-		Log.error(Utils.colors.error(e));
+		Log.error(e);
 		throw new Error("No permission to access config file!");
 	}
 
 	// Validate syntax of the configuration file.
-	Log.info(Utils.colors.info("Checking file... "), configFileName);
+	Log.info("Checking file... ", configFileName);
 
 	// I'm not sure if all ever is utf-8
 	const configFile = fs.readFileSync(configFileName, "utf-8");
@@ -60,13 +56,75 @@ function checkConfigFile() {
 	});
 
 	if (errors.length === 0) {
-		Log.info(Utils.colors.pass("Your configuration file doesn't contain syntax errors :)"));
+		Log.info(colors.green("Your configuration file doesn't contain syntax errors :)"));
 	} else {
-		Log.error(Utils.colors.error("Your configuration file contains syntax errors :("));
+		Log.error(colors.red("Your configuration file contains syntax errors :("));
 
 		for (const error of errors) {
 			Log.error(`Line ${error.line} column ${error.column}: ${error.message}`);
 		}
+		return;
+	}
+
+	Log.info("Checking modules structure configuration... ");
+
+	// Make Ajv schema confguration of modules config
+	// only scan "module" and "position"
+	const schema = {
+		type: "object",
+		properties: {
+			modules: {
+				type: "array",
+				items: {
+					type: "object",
+					properties: {
+						module: {
+							type: "string"
+						},
+						position: {
+							type: "string",
+							enum: [
+								"top_bar",
+								"top_left",
+								"top_center",
+								"top_right",
+								"upper_third",
+								"middle_center",
+								"lower_third",
+								"bottom_left",
+								"bottom_center",
+								"bottom_right",
+								"bottom_bar",
+								"fullscreen_above",
+								"fullscreen_below"
+							]
+						}
+					},
+					required: ["module"]
+				}
+			}
+		}
+	};
+
+	// scan all modules
+	const validate = ajv.compile(schema);
+	const data = require(configFileName);
+
+	const valid = validate(data);
+	if (!valid) {
+		let module = validate.errors[0].instancePath.split("/")[2];
+		let position = validate.errors[0].instancePath.split("/")[3];
+
+		Log.error(colors.red("This module configuration contains errors:"));
+		Log.error(data.modules[module]);
+		if (position) {
+			Log.error(colors.red(`${position}: ${validate.errors[0].message}`));
+			Log.error(validate.errors[0].params.allowedValues);
+		} else {
+			Log.error(colors.red(validate.errors[0].message));
+		}
+	} else {
+		Log.info(colors.green("Your modules structure configuration doesn't contain errors :)"));
 	}
 }
 

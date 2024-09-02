@@ -1,14 +1,7 @@
 /* global WeatherProvider, WeatherObject */
 
-/* MagicMirror²
- * Module: Weather
- * Provider: Weatherbit
- *
- * By Andrew Pometti
- * MIT Licensed
- *
- * This class is a provider for Weatherbit, based on Nicholas Hubbard's class
- * for Dark Sky & Vince Peri's class for Weather.gov.
+/* This class is a provider for Weatherbit,
+ * see https://www.weatherbit.io/
  */
 WeatherProvider.register("weatherbit", {
 	// Set the name of the provider.
@@ -23,11 +16,11 @@ WeatherProvider.register("weatherbit", {
 		lon: 0
 	},
 
-	fetchedLocation: function () {
+	fetchedLocation () {
 		return this.fetchedLocationName || "";
 	},
 
-	fetchCurrentWeather() {
+	fetchCurrentWeather () {
 		this.fetchData(this.getUrl())
 			.then((data) => {
 				if (!data || !data.data[0] || typeof data.data[0].temp === "undefined") {
@@ -44,7 +37,7 @@ WeatherProvider.register("weatherbit", {
 			.finally(() => this.updateAvailable());
 	},
 
-	fetchWeatherForecast() {
+	fetchWeatherForecast () {
 		this.fetchData(this.getUrl())
 			.then((data) => {
 				if (!data || !data.data) {
@@ -65,10 +58,9 @@ WeatherProvider.register("weatherbit", {
 
 	/**
 	 * Overrides method for setting config to check if endpoint is correct for hourly
-	 *
 	 * @param {object} config The configuration object
 	 */
-	setConfig(config) {
+	setConfig (config) {
 		this.config = config;
 		if (!this.config.weatherEndpoint) {
 			switch (this.config.type) {
@@ -89,12 +81,12 @@ WeatherProvider.register("weatherbit", {
 	},
 
 	// Create a URL from the config and base URL.
-	getUrl() {
+	getUrl () {
 		return `${this.config.apiBase}${this.config.weatherEndpoint}?lat=${this.config.lat}&lon=${this.config.lon}&units=M&key=${this.config.apiKey}`;
 	},
 
 	// Implement WeatherDay generator.
-	generateWeatherDayFromCurrentWeather(currentWeatherData) {
+	generateWeatherDayFromCurrentWeather (currentWeatherData) {
 		//Calculate TZ Offset and invert to convert Sunrise/Sunset times to Local
 		const d = new Date();
 		let tzOffset = d.getTimezoneOffset();
@@ -116,7 +108,7 @@ WeatherProvider.register("weatherbit", {
 		return currentWeather;
 	},
 
-	generateWeatherObjectsFromForecast(forecasts) {
+	generateWeatherObjectsFromForecast (forecasts) {
 		const days = [];
 
 		for (const forecast of forecasts) {
@@ -136,7 +128,7 @@ WeatherProvider.register("weatherbit", {
 	},
 
 	// Map icons from Dark Sky to our icons.
-	convertWeatherType(weatherType) {
+	convertWeatherType (weatherType) {
 		const weatherTypes = {
 			t01d: "day-thunderstorm",
 			t01n: "night-alt-thunderstorm",

@@ -1,11 +1,5 @@
-/* global SunCalc */
+/* global SunCalc, formatTime */
 
-/* MagicMirror²
- * Module: Clock
- *
- * By Michael Teeuw https://michaelteeuw.nl
- * MIT Licensed.
- */
 Module.register("clock", {
 	// Module config defaults.
 	defaults: {
@@ -32,20 +26,20 @@ Module.register("clock", {
 		secondsColor: "#888888",
 
 		showSunTimes: false,
-		showMoonTimes: false,
+		showMoonTimes: false, // options: false, 'times' (rise/set), 'percent' (lit percent), 'phase' (current phase), or 'both' (percent & phase)
 		lat: 47.630539,
 		lon: -122.344147
 	},
 	// Define required scripts.
-	getScripts: function () {
+	getScripts () {
 		return ["moment.js", "moment-timezone.js", "suncalc.js"];
 	},
 	// Define styles.
-	getStyles: function () {
+	getStyles () {
 		return ["clock_styles.css"];
 	},
 	// Define start sequence.
-	start: function () {
+	start () {
 		Log.info(`Starting module: ${this.name}`);
 
 		// Schedule update interval.
@@ -94,7 +88,7 @@ Module.register("clock", {
 		moment.locale(config.language);
 	},
 	// Override dom generator.
-	getDom: function () {
+	getDom () {
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("clock-grid");
 
@@ -105,7 +99,6 @@ Module.register("clock", {
 		analogWrapper.className = "clock-circle";
 		const digitalWrapper = document.createElement("div");
 		digitalWrapper.className = "digital";
-		digitalWrapper.style.gridArea = "center";
 
 		/************************************
 		 * Create wrappers for DIGITAL clock
@@ -129,7 +122,7 @@ Module.register("clock", {
 		// Set content of wrappers.
 		// The moment().format("h") method has a bug on the Raspberry Pi.
 		// So we need to generate the timestring manually.
-		// See issue: https://github.com/MichMich/MagicMirror/issues/181
+		// See issue: https://github.com/MagicMirrorOrg/MagicMirror/issues/181
 		let timeString;
 		const now = moment();
 		if (this.config.timezone) {
@@ -169,21 +162,6 @@ Module.register("clock", {
 			digitalWrapper.appendChild(timeWrapper);
 		}
 
-		/**
-		 * Format the time according to the config
-		 *
-		 * @param {object} config The config of the module
-		 * @param {object} time time to format
-		 * @returns {string} The formatted time string
-		 */
-		function formatTime(config, time) {
-			let formatString = `${hourSymbol}:mm`;
-			if (config.showPeriod && config.timeFormat !== 24) {
-				formatString += config.showPeriodUpper ? "A" : "a";
-			}
-			return moment(time).format(formatString);
-		}
-
 		/****************************************************************
 		 * Create wrappers for Sun Times, only if specified in config
 		 */
@@ -201,10 +179,10 @@ Module.register("clock", {
 			}
 			const untilNextEvent = moment.duration(moment(nextEvent).diff(now));
 			const untilNextEventString = `${untilNextEvent.hours()}h ${untilNextEvent.minutes()}m`;
-			sunWrapper.innerHTML =
-				`<span class="${isVisible ? "bright" : ""}"><i class="fas fa-sun" aria-hidden="true"></i> ${untilNextEventString}</span>` +
-				`<span><i class="fas fa-arrow-up" aria-hidden="true"></i> ${formatTime(this.config, sunTimes.sunrise)}</span>` +
-				`<span><i class="fas fa-arrow-down" aria-hidden="true"></i> ${formatTime(this.config, sunTimes.sunset)}</span>`;
+			sunWrapper.innerHTML
+				= `<span class="${isVisible ? "bright" : ""}"><i class="fas fa-sun" aria-hidden="true"></i> ${untilNextEventString}</span>`
+				+ `<span><i class="fas fa-arrow-up" aria-hidden="true"></i> ${formatTime(this.config, sunTimes.sunrise)}</span>`
+				+ `<span><i class="fas fa-arrow-down" aria-hidden="true"></i> ${formatTime(this.config, sunTimes.sunset)}</span>`;
 			digitalWrapper.appendChild(sunWrapper);
 		}
 
@@ -223,11 +201,15 @@ Module.register("clock", {
 				moonSet = nextMoonTimes.set;
 			}
 			const isVisible = now.isBetween(moonRise, moonSet) || moonTimes.alwaysUp === true;
+			const showFraction = ["both", "percent"].includes(this.config.showMoonTimes);
+			const showUnicode = ["both", "phase"].includes(this.config.showMoonTimes);
 			const illuminatedFractionString = `${Math.round(moonIllumination.fraction * 100)}%`;
-			moonWrapper.innerHTML =
-				`<span class="${isVisible ? "bright" : ""}"><i class="fas fa-moon" aria-hidden="true"></i> ${illuminatedFractionString}</span>` +
-				`<span><i class="fas fa-arrow-up" aria-hidden="true"></i> ${moonRise ? formatTime(this.config, moonRise) : "..."}</span>` +
-				`<span><i class="fas fa-arrow-down" aria-hidden="true"></i> ${moonSet ? formatTime(this.config, moonSet) : "..."}</span>`;
+			const image = showUnicode ? [..."🌑🌒🌓🌔🌕🌖🌗🌘"][Math.floor(moonIllumination.phase * 8)] : "<i class=\"fas fa-moon\" aria-hidden=\"true\"></i>";
+
+			moonWrapper.innerHTML
+				= `<span class="${isVisible ? "bright" : ""}">${image} ${showFraction ? illuminatedFractionString : ""}</span>`
+				+ `<span><i class="fas fa-arrow-up" aria-hidden="true"></i> ${moonRise ? formatTime(this.config, moonRise) : "..."}</span>`
+				+ `<span><i class="fas fa-arrow-down" aria-hidden="true"></i> ${moonSet ? formatTime(this.config, moonSet) : "..."}</span>`;
 			digitalWrapper.appendChild(moonWrapper);
 		}
 
@@ -258,7 +240,7 @@ Module.register("clock", {
 				analogWrapper.style.background = `url(${this.data.path}faces/${this.config.analogFace}.svg)`;
 				analogWrapper.style.backgroundSize = "100%";
 
-				// The following line solves issue: https://github.com/MichMich/MagicMirror/issues/611
+				// The following line solves issue: https://github.com/MagicMirrorOrg/MagicMirror/issues/611
 				// analogWrapper.style.border = "1px solid black";
 				analogWrapper.style.border = "rgba(0, 0, 0, 0.1)"; //Updated fix for Issue 611 where non-black backgrounds are used
 			} else if (this.config.analogFace !== "none") {
@@ -296,9 +278,14 @@ Module.register("clock", {
 		 */
 		if (this.config.displayType === "analog") {
 			// Display only an analog clock
-			if (this.config.analogShowDate === "top") {
+			if (this.config.showDate) {
+				// Add date to the analog clock
+				dateWrapper.innerHTML = now.format(this.config.dateFormat);
+				wrapper.appendChild(dateWrapper);
+			}
+			if (this.config.analogShowDate === "bottom") {
 				wrapper.classList.add("clock-grid-bottom");
-			} else if (this.config.analogShowDate === "bottom") {
+			} else if (this.config.analogShowDate === "top") {
 				wrapper.classList.add("clock-grid-top");
 			}
 			wrapper.appendChild(analogWrapper);
