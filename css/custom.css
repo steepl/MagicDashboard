@@ -3,7 +3,7 @@
 :root {
     --dark-gray: #666;
     --accent-color: greenyellow;
-    --alarm-background: darkslateblue;
+    --alarm-background: rgb(49, 90, 151);
     --light-gray: gainsboro;
     --orange-gray: bisque;
     --floral: floralwhite;
@@ -19,8 +19,7 @@ body {
 /* module header tags */
 
 header {
-    border-image: linear-gradient(to right, var(--dark-gray) 0%, transparent 125%);
-    border-image-slice: 1;
+    border-color: #80808042;
     color: var(--white);
     font-size: 30px;
     height: 30px;
@@ -29,7 +28,7 @@ header {
 /* background */
 
 .region.fullscreen.below {
-    background-image: url("images/case.png");
+    background-image: url("images/ninja.png");
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -38,6 +37,9 @@ header {
 
 .region.top.left {
     top: inherit;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 0 1.25em 0 1.25em;
 }
 
 .region.top.right {
@@ -46,6 +48,10 @@ header {
 
 .region.bottom.left {
     width: 75vw;
+    /* border: 2px solid black; */
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 0 0 1.25em 1.1em;
 }
 
 /* clock module */
@@ -143,5 +149,5 @@ header {
 
 #DAILYALARM .after:first-of-type {
     background-color: var(--alarm-background);
-    border-left: .5em solid rgba(65, 55, 126);
+    border-left: .5em solid var(--alarm-background + 10%);
 }
