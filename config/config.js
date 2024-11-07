@@ -53,14 +53,13 @@ let config = {
 			module: "calendar",
 			position: "top_left",
 			fetchInterval: 3600000,
+			useCalendarSymbols: false,
 			config: {
 				calendars: [
 					{
-						symbol: "calendar-check",
 						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=76"
 					},
 					{
-						symbol: "",
 						url: "webcal://webcal.guru/nl-NL/kalender_downloaden?calendar_instance_id=204"
 					}
 				],

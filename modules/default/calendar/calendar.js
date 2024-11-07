@@ -235,30 +235,34 @@ Module.register("calendar", {
 			if (event.today) eventWrapper.className += " today";
 			else if (event.tomorrow) eventWrapper.className += " tomorrow";
 
-			const symbolWrapper = document.createElement("td");
+			// check if useCalendarSymbols property is enabled
+			if (this.getCalendarProperty(this.url, "useCalendarSymbols")) {
+				
+				const symbolWrapper = document.createElement("td");
 
-			if (this.config.displaySymbol) {
-				if (this.config.colored && this.config.coloredSymbolOnly) {
-					symbolWrapper.style.cssText = "color:" + this.colorForUrl(event.url);
-				}
-
-				const symbolClass = this.symbolClassForUrl(event.url);
-				symbolWrapper.className = "symbol align-right " + symbolClass;
-
-				const symbols = this.symbolsForEvent(event);
-				symbols.forEach((s, index) => {
-					const symbol = document.createElement("span");
-					symbol.className = s;
-					if (index > 0) {
-						symbol.style.paddingLeft = "5px";
+				if (this.config.displaySymbol) {
+					if (this.config.colored && this.config.coloredSymbolOnly) {
+						symbolWrapper.style.cssText = "color:" + this.colorForUrl(event.url);
 					}
-					symbolWrapper.appendChild(symbol);
-				});
-				eventWrapper.appendChild(symbolWrapper);
-			} else if (this.config.timeFormat === "dateheaders") {
-				const blankCell = document.createElement("td");
-				blankCell.innerHTML = "&nbsp;&nbsp;&nbsp;";
-				eventWrapper.appendChild(blankCell);
+
+					const symbolClass = this.symbolClassForUrl(event.url);
+					symbolWrapper.className = "symbol align-right " + symbolClass;
+
+					const symbols = this.symbolsForEvent(event);
+					symbols.forEach((s, index) => {
+						const symbol = document.createElement("span");
+						symbol.className = s;
+						if (index > 0) {
+							symbol.style.paddingLeft = "5px";
+						}
+						symbolWrapper.appendChild(symbol);
+					});
+					eventWrapper.appendChild(symbolWrapper);
+				} else if (this.config.timeFormat === "dateheaders") {
+					const blankCell = document.createElement("td");
+					blankCell.innerHTML = "&nbsp;&nbsp;&nbsp;";
+					eventWrapper.appendChild(blankCell);
+				}
 			}
 
 			const titleWrapper = document.createElement("td");
