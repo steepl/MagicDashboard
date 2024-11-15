@@ -120,13 +120,14 @@ header {
     margin-top: 5px;
 }
 
-/* alarm module */
+/* daily alarm module */
 
 #DAILYALARM {
     display: flex;
     flex-direction: column;
     gap: .7em;
     font-size: 1.3rem;
+    align-items: flex-end;
 }
 
 #DAILYALARM .text {
@@ -140,21 +141,16 @@ header {
 #DAILYALARM .before {
     backdrop-filter: blur(10px);
     border-radius: 10px;
-    padding: 1.3em 1em 1.3em 3em;
-}
-
-#DAILYALARM .before:first-of-type {
-    background-color: var(--alarm-background);
-    border-left: .5em solid rgba(65, 55, 126);
+    padding: 1.3em 1em 1.3em 2.75em;
+    width: max-content;
 }
 
 #DAILYALARM .after {
-    backdrop-filter: blur(5px);
     border-radius: 10px;
-    padding: 1.3em 1em 1.3em 3em;
+    padding: 1.3em 1em 1.3em 2.75em;
 }
 
 #DAILYALARM .after:first-of-type {
     background-color: var(--alarm-background);
-    border-left: .5em solid var(--alarm-background + 10%);
+    border-left: .5em solid var(--alarm-background + 10%);  
 }
