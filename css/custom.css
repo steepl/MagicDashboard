@@ -42,7 +42,7 @@ header {
     padding: var(--blur-padding);
     /* offset the padding to create optical alignment */
     margin-left: calc(-1 * var(--blur-padding));
-    margin-bottom: calc(-1 * var(--blur-padding));
+    margin-top: calc(-1 * var(--blur-padding));
 }
 
 .region.top.right {
