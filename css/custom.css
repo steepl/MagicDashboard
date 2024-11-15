@@ -10,6 +10,7 @@
     --beige: beige;
     --white: white;
     --font-size-small-medium: 1.25rem;
+    --blur-padding: 1.25em;
 }
 
 body {
@@ -21,11 +22,12 @@ body {
 header {
     border-color: #80808042;
     color: var(--white);
-    font-size: 30px;
-    height: 30px;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    height: auto;
 }
 
-/* background */
+/* regions */
 
 .region.fullscreen.below {
     background-image: url("images/ninja.png");
@@ -33,25 +35,28 @@ header {
     background-size: cover;
 }
 
-/* regions */
-
 .region.top.left {
     top: inherit;
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    padding: 0 1.25em 0 1.25em;
+    padding: var(--blur-padding);
+    /* offset the padding to create optical alignment */
+    margin-left: calc(-1 * var(--blur-padding));
+    margin-bottom: calc(-1 * var(--blur-padding));
 }
 
 .region.top.right {
     top: inherit;
 }
 
-.region.bottom.left {
-    width: 75vw;
-    /* border: 2px solid black; */
-    backdrop-filter: blur(10px);
+.region.bottom.bar {
+    text-align: left;
     border-radius: 20px;
-    padding: 0 0 1.25em 1.1em;
+    backdrop-filter: blur(10px);
+    padding: var(--blur-padding);
+    /* offset the padding to create optical alignment */
+    margin-left: calc(-1 * var(--blur-padding));
+    margin-bottom: calc(-1 * var(--blur-padding));
 }
 
 /* clock module */
@@ -81,6 +86,10 @@ header {
 
 /* newsfeed module */
 
+#module_4_newsfeed {
+    margin: 0;
+}
+
 #source-title {
     border: 2px var(--accent-color);
     border-style: solid;
@@ -91,10 +100,6 @@ header {
 #publish-date {
     color: var(--light-gray);
     padding: 6px;
-}
-
-.newsfeed {
-    padding-right: 30px;
 }
 
 .newsfeed-source {
@@ -114,6 +119,8 @@ header {
     color: var(--floral);
     margin-top: 5px;
 }
+
+/* alarm module */
 
 #DAILYALARM {
     display: flex;

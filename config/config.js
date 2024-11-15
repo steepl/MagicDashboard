@@ -81,8 +81,8 @@ let config = {
 		// {
 		{
 			module: "newsfeed",
-			position: "bottom_left",
-			header: "📢💻 Het laatste tech nieuws",
+			position: "bottom_bar",
+			header: "Het laatste tech nieuws",
 			config: {
 				feeds: [
 					{
@@ -124,14 +124,14 @@ let config = {
 				broadcastNewsUpdates: true
 			}
 		},
-		{
-			module: 'MMM-News-QR',
-			position: 'bottom_right',
-			config: {
-				// Size of the Code
-				imageSize: 150
-			}
-		},
+		// {
+		// 	module: 'MMM-News-QR',
+		// 	position: 'bottom_bar',
+		// 	config: {
+		// 		// Size of the Code
+		// 		imageSize: 150
+		// 	}
+		// },
 		{
 			module: "MMM-DailyAlarm",
 			header: "Blokken",
